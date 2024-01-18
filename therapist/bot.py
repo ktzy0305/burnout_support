@@ -27,8 +27,8 @@ def init_bot(bot, LLM):
         print(f"Message received! @{message.from_user.username} [{message.from_user.id}]: {message.text}")
         # reply = ??? FIX ME
 
-        llm_reply = LLM.get_reply(message.text)
         reply = bot.reply_to(message, "Typing . . .")
+        llm_reply = LLM.get_reply(message.text)
         bot.edit_message_text(llm_reply, reply.chat.id, reply.message_id)
         # reply.edit_message(reply_message)
 
