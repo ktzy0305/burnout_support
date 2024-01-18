@@ -12,8 +12,9 @@ import llm
 def init_bot(bot, LLM):
     @bot.message_handler(commands=['start'])
     def on_start(message):
-        bot.send_message(message.chat.id, "Waking up! Give me a bit . . .")
-        bot.send_message(message.chat.id, "Hey there! How are you doing? ")
+        reply = bot.send_message(message.chat.id, "Waking up! Give me a bit . . .")
+        # reply.send_message(message.chat.id, "Hi! Happy to see you today, how are you feeling?")
+        bot.edit_message_text("Hi! Happy to see you today, how are you feeling?", reply.chat.id, reply.message_id)
         # LLM.chat.append({"role" : "assistant", "content" : "Hey there!"})
 
     # @bot.message_handler(commands=['newchat'])
@@ -25,8 +26,11 @@ def init_bot(bot, LLM):
     def on_message(message):
         print(f"Message received! @{message.from_user.username} [{message.from_user.id}]: {message.text}")
         # reply = ??? FIX ME
-        reply = LLM.get_reply(message.text)
-        bot.reply_to(message, reply)
+
+        llm_reply = LLM.get_reply(message.text)
+        reply = bot.reply_to(message, "Typing . . .")
+        bot.edit_message_text(llm_reply, reply.chat.id, reply.message_id)
+        # reply.edit_message(reply_message)
 
     return bot
 
