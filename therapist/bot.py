@@ -13,8 +13,8 @@ def init_bot(bot, LLM):
     @bot.message_handler(commands=['start'])
     def on_start(message):
         bot.send_message(message.chat.id, "Waking up! Give me a bit . . .")
-        bot.send_message(message.chat.id, "Hey there! ")
-        LLM.chat.append({"role" : "assistant", "content" : "Hey there!"})
+        bot.send_message(message.chat.id, "Hey there! How are you doing? ")
+        # LLM.chat.append({"role" : "assistant", "content" : "Hey there!"})
 
     # @bot.message_handler(commands=['newchat'])
     # def on_new_chat(message):
