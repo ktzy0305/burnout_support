@@ -5,7 +5,7 @@ from prompts import therapist_system_fpv, therapist_system_prompt
 class LLM:
     def __init__(self):
         # model_string = "mistralai/Mistral-7B-Instruct-v0.2"
-        model_string = "mistralai/Mistral-7B-Instruct-v0.2"
+        model_string = "mistralai/Mixtral-8x7B-Instruct-v0.1"
         # model_string = "01-ai/Yi-34B-Chat"
         # model_string = "HuggingFaceH4/zephyr-7b-alpha"
         # model_string = "openchat/openchat-3.5-0106"
