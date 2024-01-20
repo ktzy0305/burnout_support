@@ -4,3 +4,5 @@
 venv
 setenvvars.sh
 cache/
+__pycache__
+saved_index/
