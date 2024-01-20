@@ -52,7 +52,9 @@ def __main__():
     print("Initialising LLM .  .   .")
     try:
         LLM = llm.LLM()
+        print("\x1b[38;5;46mLLM initialised \x1b[0m")
         bot = init_bot(bot, LLM)
+        print("\x1b[38;5;46mBot initialised\x1b[0m")
         bot.infinity_polling()
     except Exception as e:
         print(f"{e}")
