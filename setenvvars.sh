@@ -1,0 +1,2 @@
+export telegram_bot_token=
+export HUGGINGFACEHUB_API_TOKEN=
