@@ -1,3 +1,6 @@
 .vscode
 .env
 *.DS_Store
+venv
+setenvvars.sh
+cache/
