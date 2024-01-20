@@ -12,29 +12,38 @@ CHUNK_OVERLAP = 50
 
 text_splitter = RecursiveCharacterTextSplitter(chunk_size=CHUNK_SIZE, chunk_overlap=CHUNK_OVERLAP, length_function=len)
 
-def load_pdf(vectorstore: any):
+def load_pdf(vector_store: any):
   pdf_path = os.path.join(BASE_DIR, "data", "pdf")
-  chunks = None
+  # chunks = None
   for file in os.listdir(pdf_path):
     curr_path = os.path.join(pdf_path, file)
     loader = PyPDFLoader(curr_path)
-    if chunks is None:
-      chunks = get_chunks(loader)
-    else:
-      chunks += get_chunks(loader)
-  return chunks
+    pages = loader.load_and_split()
+    chunk = text_splitter.transform_documents(pages)
+    vector_store.add_documents(chunk)
+    # if chunks is None:
+    #   # chunks = get_chunks(loader)
+    #   chunks = text_splitter.transform_documents(pages)
+    # else:
+    #   chunks += text_splitter.transform_documents(pages)
+    #   # chunks += get_chunks(loader)
+  # print(chunks)
+  # print(type(chunks))      
+  # return vector_store
 
-def load_urls(vectorstore: any):
+def load_urls():
   url_path = os.path.join(BASE_DIR, "data", "html", "sources.txt")
   chunks = None
   with open(url_path, "r") as fp:
     while line := fp.readline():
-      loader = WebBaseLoader(line)
+      loader = WebBaseLoader(line).load()
       if chunks is None:
-        chunks = get_chunks(loader)
+        chunks = text_splitter.transform_documents(loader)
       else:
-        chunks += get_chunks(loader)
+        # chunks += get_chunks(loader)
+        chunks += text_splitter.transform_documents(loader)
   print(chunks)
+  print(type(chunks))
   return chunks
 
 def get_chunks(loader):
