@@ -1,9 +1,14 @@
 # based on https://hckr.cc/hnr2024-ahrefs
 
+import numpy as np
 import os
 import telebot
 import requests
+
+from constants import BASE_DIR
+from deepface import DeepFace
 from langchain_community.llms import HuggingFaceHub
+from PIL import Image
 
 # from llm import LLM
 import llm
@@ -31,7 +36,53 @@ def init_bot(bot, LLM):
         llm_reply = LLM.get_reply(message.text)
         bot.edit_message_text(llm_reply, reply.chat.id, reply.message_id)
         # reply.edit_message(reply_message)
-
+        
+    @bot.message_handler(content_types=['photo'])
+    def on_image(message):
+        file_id = message.photo[-1].file_id
+        file_info = bot.get_file(file_id)
+        downloaded_file = bot.download_file(file_info.file_path)
+        
+        # Save the downloaded file to a local file
+        user_image_dir = os.path.join(BASE_DIR, 'user_images')
+        os.mkdir(user_image_dir)
+        local_filename = os.path.join(user_image_dir, 'downloaded_image.jpg')
+        with open(local_filename, 'wb') as local_file:
+            local_file.write(downloaded_file)
+        
+        # Start the reply procedure
+        reply = bot.reply_to(message, "Typing . . .")
+        
+        try: 
+            # Pass downloaded file to emotion classifier
+            face_analysis = DeepFace.analyze(img_path=local_filename)
+            
+            # Retrieve face analysis results
+            if (len(face_analysis) > 1):
+                llm_reply = f"{len(face_analysis)} faces detected in your photo."
+                bot.edit_message_text(llm_reply, reply.chat.id, reply.message_id)
+                for count, analysis in enumerate(face_analysis):
+                    age = analysis["age"]
+                    emotion = analysis["dominant_emotion"]
+                    gender = analysis["dominant_gender"]
+                    race = analysis["dominant_race"]
+                    llm_reply += f"\nPerson {count + 1}: You are a {age} {race} {gender} who is feeling {emotion}."
+                    
+                bot.edit_message_text(llm_reply, reply.chat.id, reply.message_id)
+            else:
+                age = face_analysis[0]["age"]
+                emotion = face_analysis[0]["dominant_emotion"]
+                gender = face_analysis[0]["dominant_gender"]
+                race = face_analysis[0]["dominant_race"]
+                llm_reply = f"You are a {age} {race} {gender} who is feeling {emotion}."
+                bot.edit_message_text(llm_reply, reply.chat.id, reply.message_id)
+        except ValueError:
+            bot.edit_message_text("Face could not be detected", reply.chat.id, reply.message_id)
+        finally:
+            # Remove local file after use
+            os.remove(local_filename)
+            os.rmdir(user_image_dir)
+        
     return bot
 
 
