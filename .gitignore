@@ -7,3 +7,4 @@ cache/
 __pycache__
 saved_index/
 user_images/
+setenvvars.sh
