@@ -2,7 +2,7 @@ from langchain_community.llms import HuggingFaceHub
 from langchain_community.vectorstores import FAISS
 from transformers import AutoTokenizer
 
-from prompts import therapist_system_fpv, therapist_system_prompt
+from prompts import therapist_system_prompt, therapist_system_prompt_fpv
 from vector_store import VectorStore
 
 class LLM:
@@ -19,7 +19,7 @@ class LLM:
             },
             {
                 "role": "assistant",
-                "content": therapist_system_fpv
+                "content": therapist_system_prompt_fpv
             }
         ]
         self.llm = HuggingFaceHub(

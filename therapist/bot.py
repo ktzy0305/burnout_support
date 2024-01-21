@@ -19,7 +19,7 @@ def init_bot(bot, LLM):
     def on_start(message):
         reply = bot.send_message(message.chat.id, "Waking up! Give me a bit . . .")
         # reply.send_message(message.chat.id, "Hi! Happy to see you today, how are you feeling?")
-        bot.edit_message_text("Hi! Happy to see you today, how are you feeling?", reply.chat.id, reply.message_id)
+        bot.edit_message_text("Hi! Happy to see you today, how are you feeling? 😊", reply.chat.id, reply.message_id)
         # LLM.chat.append({"role" : "assistant", "content" : "Hey there!"})
 
     # @bot.message_handler(commands=['newchat'])
